@@ -1,10 +1,15 @@
 <?php
+require_once("ClassParser.php");
 if (isset($_FILES)) {
 	$file = $_FILES['file']["tmp_name"];
 }
 if (!empty($file)) {
 	$fo = new SplFileObject($file);
 	$contents = "";
+	$style = '<style type="text/css">'.PHP_EOL;
+	$style.= 'ins { color:blue }'.PHP_EOL;
+	$style.= 'del { color:red }'.PHP_EOL;
+	$style.= '</style>'.PHP_EOL;
 	while (!$fo->eof()) {
 		$line = $fo->fgets();
 		$line = str_replace("<", "&lt;", $line);
@@ -34,16 +39,14 @@ if (!empty($file)) {
 		}
 		$contents.= $line;
 		if (strpos($line, "\ No newline at end of file") !== false) {
-			$style = '<style type="text/css">';
-			$style.= 'ins { color:blue }';
-			$style.= 'del { color:red }';
-			$style.= '</style>';
 			$contents = $style."<pre>".$contents."</pre>";
 			$fileName = str_replace("/", "_", $fileName);
 			file_put_contents($fileName.".html", $contents);
 			$contents = "";
 		}
 	}
+	$cp = new ClassParser($file);
+	$cp->exec();
 }
 ?>
 <form enctype="multipart/form-data" action="index.php" method="post">
