@@ -1,6 +1,6 @@
 <?php
 require_once("ClassParser.php");
-if (isset($_FILES)) {
+if (isset($_FILES) && isset($_FILES["file"])) {
 	$file = $_FILES['file']["tmp_name"];
 }
 if (!empty($file)) {
@@ -45,7 +45,7 @@ if (!empty($file)) {
 			$contents = "";
 		}
 	}
-	$cp = new ClassParser($file);
+	$cp = new ClassParser($file, $_POST["rms"]);
 	$cp->exec();
 }
 ?>
@@ -53,6 +53,12 @@ if (!empty($file)) {
 	<input type="submit" value="登録">
 	<table>
 		<tbody>
+			<tr>
+				<th>RMS</th>
+				<td>
+					<input type="number" name="rms">
+				</td>
+			</tr>
 			<tr>
 				<th>ファイル</th>
 				<td>

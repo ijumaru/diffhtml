@@ -1,8 +1,10 @@
 <?php
 class ClassParser {
 	private $fileName;
-	public function __construct($fileName) {
+	private $rms;
+	public function __construct($fileName, $rms) {
 		$this->fileName = $fileName;
+		$this->rms = $rms;
 	}
 	public function exec() {
 		$fo = new SplFileObject($this->fileName);
@@ -28,15 +30,23 @@ class ClassParser {
 			$datas[count($datas) - 1]["method"] = $methods;
 		}
 		$contents = "";
+		$url = "http://fwnizi.is.sei.co.jp/saaRmsRakWF21/D01_Designing/".$this->rms."/Rev.001/src/";
 		foreach ($datas as $data) {
-			$contents.= "<tr><td>".$data["class"]."</td>";
+			$contents.= PHP_EOL."<tr>".PHP_EOL;
+			$contents.= '<td><a href="'.$url.$data["class"].'.html">'.$data["class"].".</a></td>".PHP_EOL;
 			$isFirst = true;
 			foreach ($data["method"] as $method) {
 				if ($isFirst) {
-					$contents.= "<td>".$method."</td><td></td></tr>".PHP_EOL;
+					$contents.= "<td>".$method."</td>".PHP_EOL;
+					$contents.= "<td></td>".PHP_EOL;
+					$contents.= "</tr>".PHP_EOL;
 					$isFirst = false;
 				} else {
-					$contents.= "<tr><td></td><td>".$method."</td><td></td></tr>".PHP_EOL;
+					$contents.= PHP_EOL."<tr>".PHP_EOL;
+					$contents.= "<td></td>".PHP_EOL;
+					$contents.= "<td>".$method."</td>".PHP_EOL;
+					$contents.= "<td></td>".PHP_EOL;
+					$contents.= "</tr>".PHP_EOL;
 				}
 			}
 		}
