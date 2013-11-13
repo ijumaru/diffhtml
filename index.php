@@ -45,8 +45,30 @@ if (!empty($file)) {
 			$contents = "";
 		}
 	}
-	$cp = new ClassParser($file, $_POST["rms"]);
-	$cp->exec();
+	$cp = new ClassParser($file);
+	$datas = $cp->getData();
+	$contents = "";
+	$url = "http://fwnizi.is.sei.co.jp/saaRmsRakWF21/D01_Designing/".$_POST["rms"]."/Rev.001/src/";
+	foreach ($datas as $data) {
+		$contents.= PHP_EOL."<tr>".PHP_EOL;
+		$contents.= '<td><a href="'.$url.$data["class"].'.html">'.$data["class"].".</a></td>".PHP_EOL;
+		$isFirst = true;
+		foreach ($data["method"] as $method) {
+			if ($isFirst) {
+				$contents.= "<td>".$method."</td>".PHP_EOL;
+				$contents.= "<td></td>".PHP_EOL;
+				$contents.= "</tr>".PHP_EOL;
+				$isFirst = false;
+			} else {
+				$contents.= PHP_EOL."<tr>".PHP_EOL;
+				$contents.= "<td></td>".PHP_EOL;
+				$contents.= "<td>".$method."</td>".PHP_EOL;
+				$contents.= "<td></td>".PHP_EOL;
+				$contents.= "</tr>".PHP_EOL;
+			}
+		}
+	}
+	file_put_contents("isdoc_body.txt", $contents);
 }
 ?>
 <form enctype="multipart/form-data" action="index.php" method="post">
