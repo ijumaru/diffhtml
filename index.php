@@ -10,42 +10,14 @@ if (!empty($file)) {
 	$style.= 'ins { color:blue }'.PHP_EOL;
 	$style.= 'del { color:red }'.PHP_EOL;
 	$style.= '</style>'.PHP_EOL;
-	while (!$fo->eof()) {
-		$line = $fo->fgets();
-		$line = str_replace("<", "&lt;", $line);
-		$line = str_replace(">", "&gt;", $line);
-		while (preg_match('/^[ +-]\t(.*?)$/i', $line, $matches) === 1) {
-			$line = preg_replace('/^([ +-])\t(.*?)$/i', '$1    $2', $line);
-		}
-		$line = preg_replace('/^ (.*?)$/i', '$1', $line);
-		if (strpos($line, "diff") === 0) {
-			$line = "";
-		} else if (strpos($line, "index") === 0) {
-			$line = "";
-		} else if (strpos($line, "@@") === 0) {
-			$line = "";
-		} else if (strpos($line, "+++") === 0) {
-			$fileName = trim(str_replace("+++ b/", "", $line));
-			$line = "";
-		} else if (strpos($line, "---") === 0) {
-			$fileName = trim(str_replace("--- a/", "", $line));
-			$line = "";
-		} else if (strpos($line, "+") === 0) {
-			$line = str_replace("+", "", $line);
-			$line = "<ins>".$line."</ins>";
-		} else if (strpos($line, "-") === 0) {
-			$line = str_replace("-", "", $line);
-			$line = "<del>".$line."</del>";
-		}
-		$contents.= $line;
-		if (strpos($line, "\ No newline at end of file") !== false) {
-			$contents = $style."<pre>".$contents."</pre>";
-			$fileName = str_replace("/", "_", $fileName);
-			file_put_contents($fileName.".html", $contents);
-			$contents = "";
-		}
-	}
 	$cp = new ClassParser($file);
+	$files = $cp->getFiles();
+	foreach ($files as $key => $file) {
+		$contents = $style."<pre>".$file."</pre>";
+		$fileName = str_replace("/", "_", $key);
+		file_put_contents($fileName.".html", $contents);
+		$contents = "";
+	}
 	$datas = $cp->getData();
 	$contents = "";
 	$url = "http://fwnizi.is.sei.co.jp/saaRmsRakWF21/D01_Designing/".$_POST["rms"]."/Rev.001/src/";
