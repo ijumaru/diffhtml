@@ -14,8 +14,8 @@ if (!empty($file)) {
 	$files = $cp->getFiles();
 	foreach ($files as $key => $file) {
 		$contents = $style."<pre>".$file."</pre>";
-		$fileName = str_replace("/", "_", $key);
-		file_put_contents($fileName.".html", $contents);
+		$fileNameArray = explode("/", $key);
+		file_put_contents($fileNameArray[count($fileNameArray) - 1].".html", $contents);
 		$contents = "";
 	}
 	$datas = $cp->getData();
